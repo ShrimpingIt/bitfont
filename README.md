@@ -1,7 +1,7 @@
 # bitfont
 
 Renderer-agnostic pixel fonts for python3, sourced by @olikraus for u8g2, 
-ported by @ShrimpingIt 
+ported by @ShrimpingIt for use in low-resource micropython environments.
 
 Implement a function with the signature ```plot(x,y)``` 
 to use this bitfont library in your preferred rendering environment.
