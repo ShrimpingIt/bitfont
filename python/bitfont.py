@@ -61,12 +61,12 @@ class BitFont():
             maxX = max(lineX, maxX)
         return (maxX, len(lines) * self.height)
 
-    def draw_byte(self, ascii, x, y, plot):
+    def draw_byte(self, ascii, x, y, plotter):
         """ Plot the points making up a character
         :param ascii: the character as a ascii byte
         :param x: x coord of top left pixel
         :param y: y coord of top left pixel
-        :param plot: a function which will be called as plot(x,y) for every character bit
+        :param plotter: a function which will be called as plotter(x,y) for every character bit
         :return: the number of pixel columns used by the character
         """
         assert ascii >= firstAsciiChar and ascii < endAsciiChar
@@ -82,7 +82,7 @@ class BitFont():
                 selectedBit = 1 << (drawBit % 8)
                 # plot a point if the drawBit is set
                 if not(sourceByte & selectedBit == 0):
-                    plot(x + dX, y + dY)
+                    plotter(x + dX, y + dY)
                 drawBit += 1
                 dY += 1
                 # start new column if it's the last bit
@@ -93,35 +93,35 @@ class BitFont():
                 raise e
         return dX
 
-    def draw_text(self, text, x, y, plot):
+    def draw_text(self, text, x, y, plotter):
         """Plot a single line of characters
         :param text: the characters as a string
         :param x: x coord of top left pixel
         :param y: y coord of top left pixel
-        :param plot: a function which will be called as plot(x,y) for every character bit
+        :param plotter: a function which will be called as plotter(x,y) for every character bit
         :return: the number of pixel columns used by the string
         """
         assert "\n" not in text
         dX = 0
         for char in text:
-            dX += self.draw_byte(ord(char), x + dX, y, plot)
+            dX += self.draw_byte(ord(char), x + dX, y, plotter)
         return dX
 
-    def draw_para(self, para, x, y, plot, lineHeight=None):
+    def draw_para(self, para, x, y, plotter, lineHeight=None):
         if lineHeight == None:
             lineHeight = self.height
         """Plot multiple lines of characters
         :param para: the lines as a string
         :param x: x coord of top left pixel
         :param y: y coord of top left pixel
-        :param plot: a function which will be called as plot(x,y) for every character bit
+        :param plotter: a function which will be called as plotter(x,y) for every character bit
         :return: (cols, rows) total pixels used by the text drawn
         """
         lines = para.split("\n")
         maxX = 0
         dY = 0
         for line in lines:
-            lineX = self.draw_text(line, x, y + dY, plot)
+            lineX = self.draw_text(line, x, y + dY, plotter)
             maxX = max(lineX, maxX)
             dY += lineHeight
         return (maxX, dY)
