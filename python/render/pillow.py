@@ -13,6 +13,9 @@ def normalise_color(color):
     assert color == 0 or color == 1, "Unrecognised color specification"
     return color
 
+def normalise_space(text):
+    return "\n".join([line.strip() for line in text.split('\n')])
+
 class BitScreen():
 
     def __init__(self, width=128,height=64, imageType="1", color=white):
@@ -26,21 +29,18 @@ class BitScreen():
             self.pixelMap[x,y] = color
         return plot
 
-def strip_space(text):
-    return "\n".join([line.strip() for line in text.split('\n')])
-
 def run():
     from faces.font_5x7 import font
-    message = strip_space(
-            """You are an officer at the
-            coastal fort at Senhouse.
-            You must watch the coast
-            for attack from the sea!"""
+    message = normalise_space(
+"""Pretend to CARRY the
+heavy bucket back to
+the main building
+Don't spill any"""
     )
-    (width, height) = font.para_dims(message)
+    (width, height) = [dim for dim in font.para_dims(message)]
     screen = BitScreen(width=width, height=height)
     plotter = screen.create_plotter()
-    font.draw_para(message, 0, 0, plotter, font.height)
+    font.draw_para(message, plotter, 0, 0, font.height )
     chdir(path.dirname(__file__))
     screen.image.save("pillow.png")
 
