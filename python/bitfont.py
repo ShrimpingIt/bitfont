@@ -69,7 +69,7 @@ class BitFont():
         :param y: y coord of top left pixel, default 0
         :return: the number of pixel columns used by the character
         """
-        assert ascii >= firstAsciiChar and ascii < endAsciiChar
+        assert ascii >= firstAsciiChar and ascii < endAsciiChar, "No \b{} : {} in face".format(ascii, chr(ascii))
         firstBit,endBit = self.bit_bounds(ascii)
         # read individual bits from pixBytes, and plot them
         drawBit = firstBit
@@ -101,9 +101,9 @@ class BitFont():
         :param y: y coord of top left pixel, default 0
         :return: the number of pixel columns used by the string
         """
-        assert "\n" not in text
         dX = 0
         for char in text:
+            assert char is not "\n", "use draw_para for newline"
             dX += self.draw_byte(ord(char), plotter, x + dX, y)
         return dX
 
