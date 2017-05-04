@@ -1,5 +1,6 @@
-firstAsciiChar = 32
-endAsciiChar = 127
+asciiFirst = 32
+asciiEnd = 127
+asciiNewline = ord('\n')
 
 class BitFont():
     """A BitFont provides logic for plotting pixels from a fixed-height font, using columns of bits indexed from a bytearray"""
@@ -19,9 +20,9 @@ class BitFont():
         :param ascii: the character as an ascii byte
         :return: (firstCol, endCol) the character starts at firstCol and ends before endCol
         """
-        assert ascii < endAsciiChar
+        assert ascii < asciiEnd
         # remap from ascii to endOffsets lookup
-        endIndex = ascii - firstAsciiChar
+        endIndex = ascii - asciiFirst
         # start, end bits defined by previous,current character
         firstCol = self.endCols[endIndex - 1] if endIndex > 0 else 0
         endCol = self.endCols[endIndex]
@@ -69,7 +70,7 @@ class BitFont():
         :param y: y coord of top left pixel, default 0
         :return: the number of pixel columns used by the character
         """
-        assert ascii >= firstAsciiChar and ascii < endAsciiChar, "No \b{} : {} in face".format(ascii, chr(ascii))
+        assert ascii >= asciiFirst and ascii < asciiEnd, "No \b{} : {} in face".format(ascii, chr(ascii))
         firstBit,endBit = self.bit_bounds(ascii)
         # read individual bits from pixBytes, and plot them
         drawBit = firstBit
@@ -138,15 +139,13 @@ class BitFont():
         dX = 0
         dY = 0
         for chunk in generator:
-            chunkType = type(chunk)
-            assert chunkType==bytearray or chunkType==str
-            for char in chunk:
-                if char is ord('\n'):
+            for ascii in chunk:
+                if ascii is asciiNewline:
                     dY += lineHeight
                     maxX = max(dX, maxX)
                     dX = 0
                 else:
-                    dX += self.draw_byte(char, plotter, x + dX, y + dY)
+                    dX += self.draw_byte(ascii, plotter, x + dX, y + dY)
             if dX is not 0: # catch case that last line is partial/unterminated (duplicated newline detection code)
                 dY += lineHeight
                 maxX = max(dX, maxX)
