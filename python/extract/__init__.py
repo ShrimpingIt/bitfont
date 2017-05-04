@@ -3,7 +3,7 @@ import os
 import bitfont
 
 '''The sequence of printable ascii character'''
-asciiSequence = ''.join([chr(x) for x in range(bitfont.firstAsciiChar, bitfont.endAsciiChar)])
+asciiSequence = ''.join([chr(x) for x in range(bitfont.asciiFirst, bitfont.asciiEnd)])
 
 '''Aliases for character names needing special treatment in shell/filesystem'''
 charAliases = {"?": "QUESTION", "!": "EXCLAMATION", ".": "STOP", "/": "FWDSLASH", "\\": "BACKSLASH", "`": "BACKTICK"}
