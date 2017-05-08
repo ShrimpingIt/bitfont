@@ -135,18 +135,25 @@ class BitFont():
         :param y: y coord of top left pixel, default 0
         :return: (cols, rows) total pixels used by the text drawn
         """
+        if lineHeight == None:
+            lineHeight = self.height
         maxX = 0
         dX = 0
         dY = 0
         for chunk in generator:
-            for ascii in chunk:
-                if ascii is asciiNewline:
-                    dY += lineHeight
-                    maxX = max(dX, maxX)
-                    dX = 0
-                else:
-                    dX += self.draw_byte(ascii, plotter, x + dX, y + dY)
-            if dX is not 0: # catch case that last line is partial/unterminated (duplicated newline detection code)
-                dY += lineHeight
-                maxX = max(dX, maxX)
+            if type(chunk) is str:
+                chunk = chunk.encode('ascii')
+            if type(chunk) is bytes:
+                for ascii in chunk:
+                    if ascii is asciiNewline:
+                        dY += lineHeight
+                        maxX = max(dX, maxX)
+                        dX = 0
+                    else:
+                        dX += self.draw_byte(ascii, plotter, x + dX, y + dY)
+            else:
+                raise AssertionError("Need str/bytes")
+        if dX is not 0:  # catch case that last line is partial/unterminated (duplicated newline detection code)
+            dY += lineHeight
+            maxX = max(dX, maxX)
         return (maxX, dY)
