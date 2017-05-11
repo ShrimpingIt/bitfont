@@ -49,9 +49,10 @@ class BitFont():
         :param ascii: the character as an ascii byte
         :return:
         """
+        assert type(line) is bytes, "Not Ascii"
         cols = 0
         for char in line:
-            cols += self.byte_cols(ord(char))
+            cols += self.byte_cols(char)
         return cols
 
     def para_dims(self, para):
@@ -94,18 +95,19 @@ class BitFont():
                 raise e
         return dX
 
-    def draw_line(self, text, plotter, x=0, y=0):
+    def draw_line(self, line, plotter, x=0, y=0):
         """Plot a single line of characters
-        :param text: the characters as a string
+        :param line: the characters as a string
         :param plotter: a function called as plotter(x,y) for every character bit
         :param x: x coord of top left pixel, default 0
         :param y: y coord of top left pixel, default 0
         :return: the number of pixel columns used by the string
         """
+        assert type(line) is bytes, "Not Ascii"
         dX = 0
-        for char in text:
+        for char in line:
             assert char is not "\n", "use draw_para for newline"
-            dX += self.draw_byte(ord(char), plotter, x + dX, y)
+            dX += self.draw_byte(char, plotter, x + dX, y)
         return dX
 
     def draw_para(self, para, plotter, x=0, y=0, lineHeight=None):
@@ -118,7 +120,7 @@ class BitFont():
         :param y: y coord of top left pixel, default 0
         :return: (cols, rows) total pixels used by the text drawn
         """
-        lines = para.split("\n")
+        lines = para.split(b"\n")
         maxX = 0
         dY = 0
         for line in lines:
