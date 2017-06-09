@@ -111,7 +111,7 @@ class BitFont():
         return dX
 
     def draw_para(self, para, plotter, x=0, y=0, lineHeight=None):
-        if lineHeight == None:
+        if lineHeight is None:
             lineHeight = self.height
         """Plot multiple lines of characters
         :param para: the lines as a string
