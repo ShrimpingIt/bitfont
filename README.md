@@ -23,3 +23,5 @@ size by running the extract routine again with a different configuration.
 
 P.P.S. Original .bdf files at https://github.com/cefn/u8g2/tree/master/tools/font/bdf
 
+P.P.P.PS The following is a really nice pangram for testing. 'Nymphs vex quick dwarf jog blitz'
+
